@@ -116,8 +116,9 @@ public class Parse {
          String intrucction="";
          if((values[0].contains("push"))){
              int index=Integer.parseInt(values[2]);
-             switch(values[1]){
-                    case "static":intrucction=pushprocees((index+16),index,"pointer") ;
+             switch(values[1]){                
+                    case "static":int auxstatic=index+16;
+                        intrucction=pushprocees(Integer.toString(auxstatic),index,"pointer") ;
                      break;
                     case "this": intrucction=pushprocees("THIS",index,"") ;
                      break; 
@@ -145,7 +146,8 @@ public class Parse {
          else if((values[0].equals("pop"))){
              int index=Integer.parseInt(values[2]);
              switch(values[1]){
-                    case "static":intrucction=popProcees((index+16),index,"pointer") ;
+                    case "static":int auxstatic=index+16;
+                        intrucction=popProcees(Integer.toString(auxstatic) ,index,"pointer") ;
                      break;
                     case "this": intrucction=popProcees("THIS",index,"") ;
                      break; 
