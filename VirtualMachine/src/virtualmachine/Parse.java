@@ -15,6 +15,7 @@ public class Parse {
     
     LinkedList<String> listRead= new LinkedList<String>();
     LinkedList<String> resultado= new LinkedList<String>();
+    int countlabels=0;
      public Parse(LinkedList<String> alist){
          listRead=alist;
    }
@@ -31,26 +32,77 @@ public class Parse {
 
         }
      }
-     public String ArithmeticBooleancommands(String[] values){
+     public String writeArithmetic(String[] values){
          String intrucction="";
          switch(values[0]){
                     case "add": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M+D\n" ;
                      break;
-                    case "sub":  ;
+                    case "sub": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M-D\n";
                      break; 
-                    case "neg": 
+                    case "neg": intrucction="D=0\n@SP\nA=M-1\nM=D-M\n";
                      break;
-                    case "eq":  
+                    case "eq": intrucction="@SP\n" +
+                                "AM=M-1\n" +
+                                "D=M\n" +
+                                "A=A-1\n" +
+                                "D=M-D\n" +
+                                "@FALSE" + countlabels + "\n" +
+                                "D;" + "JEQ" + "\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=-1\n" +
+                                "@CONTINUE" + countlabels + "\n" +
+                                "0;JMP\n" +
+                                "(FALSE" + countlabels + ")\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=0\n" +
+                                "(CONTINUE" + countlabels + ")\n";
+                                countlabels++;
                      break;
-                    case "gt":  
+                    case "gt":  intrucction="@SP\n" +
+                                "AM=M-1\n" +
+                                "D=M\n" +
+                                "A=A-1\n" +
+                                "D=M-D\n" +
+                                "@FALSE" + countlabels + "\n" +
+                                "D;" + "JGT" + "\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=-1\n" +
+                                "@CONTINUE" + countlabels + "\n" +
+                                "0;JMP\n" +
+                                "(FALSE" + countlabels + ")\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=0\n" +
+                                "(CONTINUE" + countlabels + ")\n";
+                                countlabels++;
                      break; 
-                    case "lt": 
+                    case "lt": intrucction="@SP\n" +
+                                "AM=M-1\n" +
+                                "D=M\n" +
+                                "A=A-1\n" +
+                                "D=M-D\n" +
+                                "@FALSE" + countlabels + "\n" +
+                                "D;" + "JLT" + "\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=-1\n" +
+                                "@CONTINUE" + countlabels + "\n" +
+                                "0;JMP\n" +
+                                "(FALSE" + countlabels + ")\n" +
+                                "@SP\n" +
+                                "A=M-1\n" +
+                                "M=0\n" +
+                                "(CONTINUE" + countlabels + ")\n";
+                                countlabels++;
                      break;
-                    case "and": 
+                    case "and": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M&D\n" ;
                      break;
-                     case "or":  ;
+                     case "or":  intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M|D\n" ;
                      break; 
-                     case "not":  ;
+                     case "not": intrucction="@SP\nA=M-1\nM=!M\n" ;
                      break; 
                     default: 
                      break;
