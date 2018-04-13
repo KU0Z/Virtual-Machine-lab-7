@@ -29,6 +29,8 @@ public class VMform extends javax.swing.JFrame {
     LinkedList<String> resultado= new LinkedList<String>();
     public VMform() {
         initComponents();
+        Btnrun.setEnabled(false);
+        BTnGuardar.setEnabled(false);
     }
 
     /**
@@ -96,7 +98,7 @@ public class VMform extends javax.swing.JFrame {
                         .addComponent(Btnrun)
                         .addGap(18, 18, 18)
                         .addComponent(BTnGuardar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +112,7 @@ public class VMform extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                     .addComponent(jScrollPane2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
