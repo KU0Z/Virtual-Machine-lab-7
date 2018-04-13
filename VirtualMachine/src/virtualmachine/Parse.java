@@ -18,16 +18,19 @@ public class Parse {
     int countlabels=0;
      public Parse(LinkedList<String> alist){
          listRead=alist;
+         Traslate();
    }
      public void Traslate()
      {
-         String[] values;
+        String[] values;
         for (int i = 0; i < listRead.size(); i++) {
             values=listRead.get(i).split(" ");
-            if((values[0]=="add")|(values[0]=="sub")|(values[0]=="neg")|(values[0]=="eq")|(values[0]=="gt")|(values[0]=="lt")|(values[0]=="and")|(values[0]=="or")|(values[0]=="not")){            
+            String command=values[0];
+            if((command.equals("add"))|(command.equals("sub"))|(command.equals("neg"))|(command=="eq")|(command=="gt")|(command=="lt")|(command=="and")|(command=="or")|(command=="not")){ 
+            resultado.add(writeArithmetic(values));
             }
-            else if((values[0]=="push")|(values[0]=="pop")){
-
+            else if((command.equals("push"))|(command.equals("pop"))){
+                resultado.add(WritePushPop(values));
             }
 
         }
@@ -109,5 +112,80 @@ public class Parse {
                 }
          return intrucction;
      }
+     public String WritePushPop(String[] values){
+         String intrucction="";
+         if((values[0].contains("push"))){
+             int index=Integer.parseInt(values[2]);
+             switch(values[1]){
+                    case "static":intrucction=pushprocees((index+16),index,"pointer") ;
+                     break;
+                    case "this": intrucction=pushprocees("THIS",index,"") ;
+                     break; 
+                    case "local":intrucction=pushprocees("LCL",index,"");
+                     break; 
+                    case "argument": intrucction=pushprocees("ARG",index,"");
+                     break;
+                     case "that":  intrucction=pushprocees("THAT",index,"");
+                     break; 
+                     case "constant": intrucction="@" + index + "\n" + "D=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
+                     break;
+                     case "pointer":
+                         String aux="THAT";
+                         if(index==0){
+                             aux="THIS";
+                         }
+                         intrucction=pushprocees(aux,index,"pointer") ;
+                     break; 
+                     case "temp": intrucction=pushprocees("R5",index+5,"") ;
+                     break; 
+                    default: 
+                     break;
+                }
+         }
+         else if((values[0].equals("pop"))){
+             int index=Integer.parseInt(values[2]);
+             switch(values[1]){
+                    case "static":     
+                        intrucction=pushprocees((index+16),index,"pointer") ;
+                     break;
+                    case "this": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M-D\n";
+                     break; 
+                    case "and": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M&D\n" ;
+                     break;
+                     case "or":  intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M|D\n" ;
+                     break; 
+                     case "not": intrucction="@SP\nA=M-1\nM=!M\n" ;
+                     break; 
+                    default: 
+                     break;
+                }
+         }
+         else{
+             
+         }
+         return intrucction;
+     }
+     public String pushprocees(String segment, int index,String pointer){
+
+        String aux="";
+        String procees="";
+        if(pointer.equals("pointer")){
+            
+        }
+        else{
+            aux="@" + index + "\n" + "A=D+A\nD=M\n";
+        }
+
+        procees= "@" + segment + "\n" +
+                "D=M\n"+
+                aux +
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                "@SP\n" +
+                "M=M+1\n";
+        return procees;
+
+    }
     
 }

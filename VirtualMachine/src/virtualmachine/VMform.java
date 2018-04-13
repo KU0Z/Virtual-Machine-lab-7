@@ -120,7 +120,7 @@ public class VMform extends javax.swing.JFrame {
     {
      String nuevaRuta = "";
      JFileChooser dialog = new JFileChooser();
-     FileNameExtensionFilter filtro = new FileNameExtensionFilter("Adembler", "asm");
+     FileNameExtensionFilter filtro = new FileNameExtensionFilter("VitualMachine", "vm");
      File archivo;
      dialog.setFileFilter(filtro);
      if(dialog.showOpenDialog(a) == JFileChooser.APPROVE_OPTION)
@@ -186,6 +186,13 @@ public class VMform extends javax.swing.JFrame {
         }
         catch(Exception ex){}
     }
+    public void correr()
+    {   Parse parseo=new Parse(lista);
+        for (int i = 0; i < parseo.resultado.size(); i++) {
+        TAresultado.append(parseo.resultado.get(i));
+        }
+    
+    }
     private void BtnLeerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLeerActionPerformed
         // TODO add your handling code here:
         LeerArchivo();
@@ -193,21 +200,22 @@ public class VMform extends javax.swing.JFrame {
 
     private void BtnrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnrunActionPerformed
         // TODO add your handling code here:
+        correr();
         BTnGuardar.setEnabled(true);
     }//GEN-LAST:event_BtnrunActionPerformed
 
     private void BTnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTnGuardarActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Hack", "hack");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Assembler", "asm");
         fileChooser.setFileFilter(filtro);
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             try {
-                FileWriter fw = new FileWriter(file.getPath()+".hack");
-                for (int i = 0; i < resultado.size(); i++) {
-                    fw.write(resultado.get(i)+"\r\n");
-                }
+                FileWriter fw = new FileWriter(file.getPath()+".asm");
+             
+                    fw.write(TAresultado.getText());
+                
                 fw.close();
             } catch (IOException ex) {
                 Logger.getLogger(VMform.class.getName()).log(Level.SEVERE, null, ex);
