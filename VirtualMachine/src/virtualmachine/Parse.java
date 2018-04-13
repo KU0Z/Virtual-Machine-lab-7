@@ -26,7 +26,7 @@ public class Parse {
         for (int i = 0; i < listRead.size(); i++) {
             values=listRead.get(i).split(" ");
             String command=values[0];
-            if((command.equals("add"))|(command.equals("sub"))|(command.equals("neg"))|(command=="eq")|(command=="gt")|(command=="lt")|(command=="and")|(command=="or")|(command=="not")){ 
+            if((command.equals("add"))|(command.equals("sub"))|(command.equals("neg"))|(command.equals("eq"))|(command.equals("gt"))|(command.equals("lt"))|(command.equals("and"))|(command.equals("or"))|(command.equals("not"))){ 
             resultado.add(writeArithmetic(values));
             }
             else if((command.equals("push"))|(command.equals("pop"))){
@@ -145,16 +145,26 @@ public class Parse {
          else if((values[0].equals("pop"))){
              int index=Integer.parseInt(values[2]);
              switch(values[1]){
-                    case "static":     
-                        intrucction=pushprocees((index+16),index,"pointer") ;
+                    case "static":intrucction=popProcees((index+16),index,"pointer") ;
                      break;
-                    case "this": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M-D\n";
+                    case "this": intrucction=popProcees("THIS",index,"") ;
                      break; 
-                    case "and": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M&D\n" ;
+                    case "local":intrucction=popProcees("LCL",index,"");
+                     break; 
+                    case "argument": intrucction=popProcees("ARG",index,"");
                      break;
-                     case "or":  intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "M=M|D\n" ;
+                     case "that":  intrucction=popProcees("THAT",index,"");
                      break; 
-                     case "not": intrucction="@SP\nA=M-1\nM=!M\n" ;
+                     case "constant": 
+                     break;
+                     case "pointer":
+                         String aux="THAT";
+                         if(index==0){
+                             aux="THIS";
+                         }
+                         intrucction=popProcees(aux,index,"pointer") ;
+                     break; 
+                     case "temp": intrucction=popProcees("R5",index+5,"") ;
                      break; 
                     default: 
                      break;
@@ -184,6 +194,31 @@ public class Parse {
                 "M=D\n" +
                 "@SP\n" +
                 "M=M+1\n";
+        return procees;
+
+    }
+     public String popProcees(String segment, int index, String pointer){
+
+        
+        String aux="D=A\n";
+        String procees="";
+        if(pointer.equals("pointer")){
+            
+        }
+        else{
+            aux="D=M\n@" + index + "\nD=D+A\n";
+        }
+
+        procees= "@" + segment + "\n" +
+                aux +
+                "@R13\n" +
+                "M=D\n" +
+                "@SP\n" +
+                "AM=M-1\n" +
+                "D=M\n" +
+                "@R13\n" +
+                "A=M\n" +
+                "M=D\n";;
         return procees;
 
     }
