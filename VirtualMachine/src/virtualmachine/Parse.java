@@ -23,15 +23,15 @@ public class Parse {
      public void Traslate()
      {
         String[] values;
-//        String[] valuesinitial= new String[3];
-//        valuesinitial[0] = "call";
-//        valuesinitial[1] = "Sys.init";
-//        valuesinitial[2] = "0";
-//        resultado.add("@256\n" +
-//                         "D=A\n" +
-//                         "@SP\n" +
-//                         "M=D\n");
-//        resultado.add(WriteFunctionCalling(valuesinitial));
+        String[] valuesinitial= new String[3];
+        valuesinitial[0] = "call";
+        valuesinitial[1] = "Sys.init";
+        valuesinitial[2] = "0";
+        resultado.add("@256\n" +
+                         "D=A\n" +
+                         "@SP\n" +
+                         "M=D\n");
+        resultado.add(WriteFunctionCalling(valuesinitial));
         for (int i = 0; i < listRead.size(); i++) {
             values=listRead.get(i).split(" ");
             String command=values[0];
@@ -155,8 +155,7 @@ public class Parse {
                      break; 
                      case "temp": intrucction=pushprocees("R5",index+5,"") ;
                      break; 
-                    default: 
-                     break;
+
                 }
          }
          else if((values[0].equals("pop"))){
@@ -184,8 +183,6 @@ public class Parse {
                      break; 
                      case "temp": intrucction=popProcees("R5",index+5,"") ;
                      break; 
-                    default: 
-                     break;
                 }
          }
          else{
@@ -218,16 +215,21 @@ public class Parse {
                     case "call": 
                         String  returnAddress="returnAddress"+countlabels;
                         countlabels++;
-                        intrucction+= pushprocees(returnAddress,0,"pointer");// saves the return address
+                        intrucction+= "@" + returnAddress + "\n" +
+                "D=A\n"+
+                "@SP\n" +
+                "A=M\n" +
+                "M=D\n" +
+                "@SP\n" +
+                "M=M+1\n";// saves the return address
                         intrucction+= pushprocees("LCL",0,"pointer");// saves the LCL of f
                         intrucction+= pushprocees("ARG",0,"pointer");// saves the ARG of f
                         intrucction+= pushprocees("THIS",0,"pointer");// saves the THIS of f
                         intrucction+= pushprocees("THAT",0,"pointer"); // saves the THAT of f
+                        int auxsuma=Integer.parseInt(values[2])+5;
                         intrucction+= "@SP\n" +// repositions SP for g
                         "D=M\n" +
-                        "@5\n" +
-                        "D=D-A\n" +
-                        "@" + values[2] + "\n" +
+                        "@"+(auxsuma)+"\n" +
                         "D=D-A\n" +
                         "@ARG\n" +
                         "M=D\n" +
@@ -249,33 +251,44 @@ public class Parse {
                                                 "A=D-A\n" +
                                                 "D=M\n" +
                                                 "@R12\n" +
-                                                "M=D\n" +
-                                                popProcees("ARG",0,"") +
+                                                "M=D\n" +              
+                                                "@ARG\n"+
+                                                "D=M\n"+
+                                                "@0\n"+
+                                                "D=D+A\n"+
+                                                "@R13\n"+
+                                                "M=D\n"+
+                                                "@SP\n"+
+                                                "AM=M-1\n"+
+                                                "D=M\n"+
+                                                "@R13\n"+
+                                                "A=M\n"+
+                                                "M=D\n"+
                                                 "@ARG\n" +
                                                 "D=M\n" +
                                                 "@SP\n" +
                                                 "M=D+1\n" +
                                                 "@R11\n" +
-                                                "D=M-1\n" +
-                                                "AM=D\n" +
+                                                "M=M-1\n" +
+                                                "A=M\n" +
                                                 "D=M\n" +
                                                 "@" + "THAT" + "\n" +
                                                 "M=D\n"+
                                                 "@R11\n" +
-                                                "D=M-1\n" +
-                                                "AM=D\n" +
+                                                "M=M-1\n" +
+                                                "A=M\n" +
                                                 "D=M\n" +
                                                 "@" + "THIS" + "\n" +
                                                 "M=D\n"+
                                                 "@R11\n" +
-                                                "D=M-1\n" +
-                                                "AM=D\n" +
+                                                "M=M-1\n" +
+                                                "A=M\n" +
                                                 "D=M\n" +
                                                 "@" + "ARG" + "\n" +
                                                 "M=D\n"+
                                                 "@R11\n" +
-                                                "D=M-1\n" +
-                                                "AM=D\n" +
+                                                "M=M-1\n" +
+                                                "A=M\n" +
                                                 "D=M\n" +
                                                 "@" + "LCL" + "\n" +
                                                 "M=D\n"+
