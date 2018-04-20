@@ -35,6 +35,9 @@ public class Parse {
             else if((command.equals("label"))|(command.equals("goto"))|(command.equals("if-goto"))){
                 resultado.add(WriteProgramFlow(values));
             }
+            else if((command.equals("function"))|(command.equals("call"))|(command.equals("return"))){
+                resultado.add(WriteFunctionCalling(values));
+            }
 
         }
      }
@@ -188,6 +191,87 @@ public class Parse {
                     case "goto": intrucction= "@" + values[1] +"\n0;JMP\n";
                      break; 
                     case "if-goto": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "@" + values[1] +"\nD;JNE\n";
+                     break;                 
+                    default: 
+                     break;
+                }
+         return intrucction;
+     }
+     public String WriteFunctionCalling(String[] values){
+         String intrucction="";
+         switch(values[0]){
+                    case "function": intrucction="(" + values[1] +")\n";
+                        for (int i = 0; i < Integer.parseInt(values[2]); i++) {
+                            intrucction+="@" + 0 + "\n" + "D=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n";
+                        }
+                     break;
+                    case "call": 
+                        String  returnAddress="returnAddress"+countlabels;
+                        countlabels++;
+                        intrucction+= pushprocees(returnAddress,0,"pointer");// saves the return address
+                        intrucction+= pushprocees("LCL",0,"pointer");// saves the LCL of f
+                        intrucction+= pushprocees("ARG",0,"pointer");// saves the ARG of f
+                        intrucction+= pushprocees("THIS",0,"pointer");// saves the THIS of f
+                        intrucction+= pushprocees("THAT",0,"pointer"); // saves the THAT of f
+                        intrucction+= "@SP\n" +// repositions SP for g
+                        "D=M\n" +
+                        "@5\n" +
+                        "D=D-A\n" +
+                        "@" + values[2] + "\n" +
+                        "D=D-A\n" +
+                        "@ARG\n" +
+                        "M=D\n" +
+                        // repositions LCL for g        
+                        "@SP\n" +
+                        "D=M\n" +
+                        "@LCL\n" +
+                        "M=D\n" +
+                        "@" + values[1] + "\n" +// transfers control to g
+                        "0;JMP\n" +
+                        "(" + returnAddress + ")\n";//the generated symbol
+                        
+                     break; 
+                    case "return": intrucction+="@LCL\n" +
+                                                "D=M\n" +
+                                                "@R11\n" +
+                                                "M=D\n" +
+                                                "@5\n" +
+                                                "A=D-A\n" +
+                                                "D=M\n" +
+                                                "@R12\n" +
+                                                "M=D\n" +
+                                                popProcees("ARG",0,"") +
+                                                "@ARG\n" +
+                                                "D=M\n" +
+                                                "@SP\n" +
+                                                "M=D+1\n" +
+                                                "@R11\n" +
+                                                "D=M-1\n" +
+                                                "AM=D\n" +
+                                                "D=M\n" +
+                                                "@" + "THAT" + "\n" +
+                                                "M=D\n"+
+                                                "@R11\n" +
+                                                "D=M-1\n" +
+                                                "AM=D\n" +
+                                                "D=M\n" +
+                                                "@" + "THIS" + "\n" +
+                                                "M=D\n"+
+                                                "@R11\n" +
+                                                "D=M-1\n" +
+                                                "AM=D\n" +
+                                                "D=M\n" +
+                                                "@" + "ARG" + "\n" +
+                                                "M=D\n"+
+                                                "@R11\n" +
+                                                "D=M-1\n" +
+                                                "AM=D\n" +
+                                                "D=M\n" +
+                                                "@" + "LCL" + "\n" +
+                                                "M=D\n"+
+                                                "@R12\n" +
+                                                "A=M\n" +
+                                                "0;JMP\n";
                      break;                 
                     default: 
                      break;
