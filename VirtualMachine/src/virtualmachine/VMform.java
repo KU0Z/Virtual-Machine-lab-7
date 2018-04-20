@@ -8,6 +8,7 @@ package virtualmachine;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.LinkedList;
@@ -118,20 +119,34 @@ public class VMform extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-        public String ObtenerRuta(Component a)
+        public File[] ObtenerRuta(Component a)
     {
      String nuevaRuta = "";
      JFileChooser dialog = new JFileChooser();
+     dialog.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
      FileNameExtensionFilter filtro = new FileNameExtensionFilter("VitualMachine", "vm");
+     File[] filesInDirectory = null;
      File archivo;
+     dialog.setFileFilter(filtro);
      dialog.setFileFilter(filtro);
      if(dialog.showOpenDialog(a) == JFileChooser.APPROVE_OPTION)
      {
         Btnrun.setEnabled(true);
+        
+         filesInDirectory =dialog.getSelectedFile().listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".vm");
+            }
+        });
+         if(filesInDirectory==null){
+             filesInDirectory=new File[1];
+             filesInDirectory[0]=dialog.getSelectedFile();
+         }
         archivo = dialog.getSelectedFile();
         nuevaRuta = archivo.getPath();
+     
      }
-     return nuevaRuta;
+     return filesInDirectory;
     }
     public void GuardarRuta(Component a) throws IOException
     {
@@ -147,7 +162,7 @@ public class VMform extends javax.swing.JFrame {
     }
     public void LeerArchivo()
     {
-        String ruta=ObtenerRuta(this);
+        File[] Archivos=ObtenerRuta(this);
         String Linea ="";
         lista= new LinkedList<String>();
         resultado=new LinkedList<String>();
@@ -156,11 +171,11 @@ public class VMform extends javax.swing.JFrame {
         try
         {
             //Si el archivo existe, lo leerá una linea a la vez
-            File Archivo = new File(ruta);
-            if(Archivo.exists())
+            for (int i = 0; i < Archivos.length; i++) {
+                if(Archivos[i].exists())
             {
             int númLinea = 0;
-            RandomAccessFile LeerArchivo = new RandomAccessFile(Archivo,"rw");
+            RandomAccessFile LeerArchivo = new RandomAccessFile(Archivos[i],"rw");
             Linea = LeerArchivo.readLine();
             String[] values;
             while(Linea != null)  //Leemos linea por linea hasta el final.
@@ -185,6 +200,9 @@ public class VMform extends javax.swing.JFrame {
             //Cerrar el lector utilizado
             LeerArchivo.close();
             }
+            }
+            
+            
         }
         catch(Exception ex){}
     }

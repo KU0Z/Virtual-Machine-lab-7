@@ -23,6 +23,15 @@ public class Parse {
      public void Traslate()
      {
         String[] values;
+//        String[] valuesinitial= new String[3];
+//        valuesinitial[0] = "call";
+//        valuesinitial[1] = "Sys.init";
+//        valuesinitial[2] = "0";
+//        resultado.add("@256\n" +
+//                         "D=A\n" +
+//                         "@SP\n" +
+//                         "M=D\n");
+//        resultado.add(WriteFunctionCalling(valuesinitial));
         for (int i = 0; i < listRead.size(); i++) {
             values=listRead.get(i).split(" ");
             String command=values[0];
@@ -41,6 +50,7 @@ public class Parse {
 
         }
      }
+ 
      public String writeArithmetic(String[] values){
          String intrucction="";
          switch(values[0]){
