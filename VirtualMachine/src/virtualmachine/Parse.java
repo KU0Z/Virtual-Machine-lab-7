@@ -32,6 +32,9 @@ public class Parse {
             else if((command.equals("push"))|(command.equals("pop"))){
                 resultado.add(WritePushPop(values));
             }
+            else if((command.equals("label"))|(command.equals("goto"))|(command.equals("if-goto"))){
+                resultado.add(WriteProgramFlow(values));
+            }
 
         }
      }
@@ -175,6 +178,20 @@ public class Parse {
          else{
              
          }
+         return intrucction;
+     }
+     public String WriteProgramFlow(String[] values){
+         String intrucction="";
+         switch(values[0]){
+                    case "label": intrucction="(" + values[1] +")\n" ;
+                     break;
+                    case "goto": intrucction= "@" + values[1] +"\n0;JMP\n";
+                     break; 
+                    case "if-goto": intrucction="@SP\n"+"AM=M-1\n" +"D=M\n" +"A=A-1\n"+ "@" + values[1] +"\nD;JNE\n";
+                     break;                 
+                    default: 
+                     break;
+                }
          return intrucction;
      }
      public String pushprocees(String segment, int index,String pointer){
